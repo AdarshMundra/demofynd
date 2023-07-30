@@ -1,24 +1,33 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Create User</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="navbar">
+        <a  href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('user_management') }}">User Management</a>
+        <a class="active" href="{{ url_for('create_user') }}">Create User</a>
+        <a href="{{ url_for('task_management') }}">Task Management</a>
+        <a href="{{ url_for('create_task') }}">Add Task</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
     <h1>Create User</h1>
     <form method="POST" action="{{ url_for('create_user') }}">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
-        <br>
+
         <label for="firstname">First Name:</label>
         <input type="text" id="firstname" name="firstname" required>
-        <br>
+
         <label for="lastname">Last Name:</label>
         <input type="text" id="lastname" name="lastname" required>
-        <br>
+
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-        <br>
+
         <input type="submit" value="Create User">
     </form>
 </body>

@@ -1,22 +1,43 @@
-<!-- templates/create_task.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Create Task</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
+     <div class="navbar">
+            {% if session['role'] == 'superadmin' %}
+                <a  href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('user_management') }}">User Management</a>
+                <a  href="{{ url_for('create_user') }}">Create User</a>
+            {% else %}
+               <a  href="{{ url_for('user_dashboard') }}">Dashboard</a>
+            {% endif %}
+                <a href="{{ url_for('task_management') }}">Task Management</a>
+            <a class="active" href="{{ url_for('create_task') }}">Add Task</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
     <h1>Create Task</h1>
     <form method="POST" action="{{ url_for('create_task') }}">
+        {% if session['role'] == 'superadmin' %}
+
         <label for="user_email">User Email:</label>
         <input type="email" id="user_email" name="user_email" required>
-        <br>
+        {% endif %}
+
         <label for="task_name">Task Name:</label>
         <input type="text" id="task_name" name="task_name" required>
-        <br>
+
+        <label for="startdate">Start date</label>
+        <input type="datetime-local" id ="datetime" name="start time" required>
+
+        <label for="enddate">End date</label>
+        <input type="datetime-local" id ="datetime" name="end time" required>
+
         <label for="description">Description:</label>
         <textarea id="description" name="description" required></textarea>
-        <br>
-        <!-- Add other task-related form fields here, like start_date, end_date, etc. -->
+
         <input type="submit" value="Create Task">
     </form>
 </body>

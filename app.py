@@ -42,6 +42,28 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/user_management')
+def user_management():
+    if 'email' in session and session['role'] == 'superadmin':
+        users = User.query.all()
+        return render_template('user_management.html', users=users)# , tasks=tasks)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/task_management')
+def task_management():
+    if 'email' in session and session['role'] == 'superadmin':
+        tasks = ToDoList.query.all()
+        return render_template('task_management.html', tasks=tasks)  # , tasks=tasks)
+    elif 'email' in session and session['role'] == 'user':
+        tasks = ToDoList.query.filter_by(user_email=session['email']).all()
+        return render_template('task_management.html', tasks=tasks)
+
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/superadmin_dashboard')
 def superadmin_dashboard():
     if 'email' in session and session['role'] == 'superadmin':
@@ -49,30 +71,30 @@ def superadmin_dashboard():
         users = User.query.all()
         tasks = ToDoList.query.all()
 
-        if request.method == 'POST':
-            if 'create_user' in request.form:
-                # Handle form data to create a new user
-                email = request.form['email']
-                firstname = request.form['firstname']
-                lastname = request.form['lastname']
-                password = request.form['password']
+        # if request.method == 'POST':
+        #     if 'create_user' in request.form:
+        #         # Handle form data to create a new user
+        #         email = request.form['email']
+        #         firstname = request.form['firstname']
+        #         lastname = request.form['lastname']
+        #         password = request.form['password']
+        #
+        #         # Create a new user and save it to the database
+        #         new_user = User(email=email, FirstName=firstname, LastName=lastname, Password=password)
+        #         db.session.add(new_user)
+        #         db.session.commit()
+        #     elif 'create_task' in request.form:
+        #         # Handle form data to create a new task
+        #         user_email = request.form['user_email']
+        #         task_name = request.form['task_name']
+        #         description = request.form['description']
+        #
+        #         # Create a new task and save it to the database
+        #         new_task = ToDoList(user_email=user_email, Name=task_name, description=description)
+        #         db.session.add(new_task)
+        #         db.session.commit()
 
-                # Create a new user and save it to the database
-                new_user = User(email=email, FirstName=firstname, LastName=lastname, Password=password)
-                db.session.add(new_user)
-                db.session.commit()
-            elif 'create_task' in request.form:
-                # Handle form data to create a new task
-                user_email = request.form['user_email']
-                task_name = request.form['task_name']
-                description = request.form['description']
-
-                # Create a new task and save it to the database
-                new_task = ToDoList(user_email=user_email, Name=task_name, description=description)
-                db.session.add(new_task)
-                db.session.commit()
-
-        return render_template('superadmin_dashboard.html', users=users, tasks=tasks)
+        return render_template('superadmin_dashboard.html')#, users=users, tasks=tasks)
     else:
         return redirect(url_for('login'))
 
@@ -82,10 +104,18 @@ def user_dashboard():
         # Fetch tasks assigned to the logged-in user from the database
         user_email = session['email']
         user_tasks = ToDoList.query.filter_by(user_email=user_email).all()
-        return render_template('user_dashboard.html', tasks=user_tasks)
+        return render_template('user_dashboard.html', tasks=user_tasks, user_role = session['role'])
     else:
         return redirect(url_for('login'))
 
+@app.route('/user_task_list/<string:user_email>')
+def user_task_list(user_email):
+    print(user_email)
+    if 'email' in session and session['role'] == 'superadmin':
+        user_tasks = ToDoList.query.filter_by(user_email=user_email).all()
+        return render_template('task_management.html', tasks=user_tasks)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
@@ -114,8 +144,8 @@ def create_user():
     return render_template('create_user.html')
 
 
-@app.route('/add_task', methods=['POST'])
-def add_task():
+@app.route('/create_task', methods=['GET','POST'])
+def create_task():
     if 'email' in session and session['role'] == 'user':
         if request.method == 'POST':
             # Handle form data to create a new task
@@ -127,20 +157,26 @@ def add_task():
             new_task = ToDoList(user_email=user_email, Name=task_name, description=description)
             db.session.add(new_task)
             db.session.commit()
-            return redirect(url_for('user_dashboard'))
+            return redirect(url_for('task_management'))
+        else:
+            return render_template('create_task.html')
     elif 'email' in session and session['role'] == 'superadmin':
         if request.method == 'POST':
             # Handle form data to create a new task
-            user_email = request.form['userEmail']
+            print(request.form)
+            user_email = request.form['user_email']
             task_name = request.form['task_name']
             description = request.form['description']
+            start_time = request.form['start time']
+            end_time = request.form['end time']
 
             # Create a new task and save it to the database
-            new_task = ToDoList(user_email=user_email, Name=task_name, description=description)
+            new_task = ToDoList(user_email=user_email, Name=task_name, description=description ,start_date=start_time,end_date=end_time)
             db.session.add(new_task)
             db.session.commit()
-            return redirect(url_for('superadmin_dashboard'))
-
+            return redirect(url_for('task_management'))
+        else:
+            return render_template('create_task.html')
 
 
 
@@ -159,6 +195,20 @@ def modify_task(task_id):
         return redirect(url_for('user_dashboard'))  # Redirect to user dashboard after task modification
 
     return render_template('modify_task.html', task=task)
+
+
+@app.route('/task_management/<int:task_id>')
+def delete_task(task_id):
+    print(task_id)
+    task = ToDoList.query.filter_by(unique_id=task_id).first()
+    print(task)
+    if task:
+        print("Hello")
+        db.session.delete(task)
+        db.session.commit()
+        return redirect(url_for('task_management'))
+    else:
+        return redirect(url_for('task_management'))
 
 
 if __name__ == '__main__':

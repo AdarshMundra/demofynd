@@ -3,8 +3,21 @@
 <head>
     <title>Superadmin Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
+    <div class="navbar">
+        {% if session['role'] == 'superadmin' %}
+            <a class="active" href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('user_management') }}">User Management</a>
+            <a href="{{ url_for('create_user') }}">Create User</a>
+        {% endif %}
+
+        <a href="{{ url_for('task_management') }}">Task Management</a>
+        <a href="{{ url_for('create_task') }}">Add Task</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
     <h1>Welcome, Superadmin!</h1>
     <p>This is your dashboard where you can manage users and tasks.</p>
 
@@ -22,79 +35,63 @@
         {% endfor %}
     </ul>
 
-    <div id="createUserFormContainer">
-        <button id="showCreateUserFormBtn">Create User</button>
-        <form id="createUserForm" method="POST" action="{{ url_for('create_user') }}" style="display: none;">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="firstname">First Name:</label>
-                <input type="text" id="firstname" name="firstname" required>
-            </div>
-            <div class="form-group">
-                <label for="lastname">Last Name:</label>
-                <input type="text" id="lastname" name="lastname" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" name="create_user" value="Create User">
-            </div>
-        </form>
-    </div>
+<!--    <div id="createUserFormContainer" style="display: none;">-->
+<!--        <form id="createUserForm" method="POST" action="{{ url_for('create_user') }}">-->
+<!--            <div class="form-group">-->
+<!--                <label for="email">Email:</label>-->
+<!--                <input type="email" id="email" name="email" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="firstname">First Name:</label>-->
+<!--                <input type="text" id="firstname" name="firstname" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="lastname">Last Name:</label>-->
+<!--                <input type="text" id="lastname" name="lastname" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="password">Password:</label>-->
+<!--                <input type="password" id="password" name="password" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <input type="submit" name="create_user" value="Create User">-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
 
-    <h2>Create Task</h2>
-    <div id="addTaskFormContainer">
-        <button id="showAddTaskFormBtn">Add Task</button>
-        <form id="addTaskForm" method="POST" action="{{ url_for('add_task') }}" style="display: none;">
-            <div class="form-group">
-                <label for="userEmail">userEmail:</label>
-                <input type="text" id="userEmail" name="userEmail" required>
-            </div>
-            <div class="form-group">
-                <label for="task_name">Task Name:</label>
-                <input type="text" id="task_name" name="task_name" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create Task">
-            </div>
-        </form>
-    </div>
+<!--    <div id="addTaskFormContainer" style="display: none;">-->
+<!--        <form id="addTaskForm" method="POST" action="{{ url_for('create_task') }}">-->
+<!--            <div class="form-group">-->
+<!--                <label for="userEmail">User Email:</label>-->
+<!--                <input type="text" id="userEmail" name="userEmail" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="task_name">Task Name:</label>-->
+<!--                <input type="text" id="task_name" name="task_name" required>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="description">Description:</label>-->
+<!--                <textarea id="description" name="description" required></textarea>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <input type="submit" value="Create Task">-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
 
-    <p>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </p>
-    <script>
-        const createUserFormContainer = document.getElementById('createUserFormContainer');
-        const showCreateUserFormBtn = document.getElementById('showCreateUserFormBtn');
-        const createUserForm = document.getElementById('createUserForm');
+<!--    <script>-->
+<!--        function toggleFormVisibility(formContainerId) {-->
+<!--            const formContainer = document.getElementById(formContainerId);-->
+<!--            formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';-->
+<!--        }-->
 
-        showCreateUserFormBtn.addEventListener('click', function() {
-            if (createUserForm.style.display === 'none') {
-                createUserForm.style.display = 'block';
-            } else {
-                createUserForm.style.display = 'none';
-            }
-        });
-        const addTaskFormContainer = document.getElementById('addTaskFormContainer');
-        const showAddTaskFormBtn = document.getElementById('showAddTaskFormBtn');
-        const addTaskForm = document.getElementById('addTaskForm');
+<!--        document.getElementById('showCreateUserFormBtn').addEventListener('click', function() {-->
+<!--            toggleFormVisibility('createUserFormContainer');-->
+<!--        });-->
 
-        showAddTaskFormBtn.addEventListener('click', function() {
-            if (addTaskForm.style.display === 'none') {
-                addTaskForm.style.display = 'block';
-            } else {
-                addTaskForm.style.display = 'none';
-            }
-        });
-    </script>
+<!--        document.getElementById('showAddTaskFormBtn').addEventListener('click', function() {-->
+<!--            toggleFormVisibility('addTaskFormContainer');-->
+<!--        });-->
+<!--    </script>-->
 </body>
 </html>

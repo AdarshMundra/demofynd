@@ -3,19 +3,63 @@
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        p.error-msg {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
     <h1>Login</h1>
     {% if error_msg %}
-        <p style="color: red;">{{ error_msg }}</p>
+        <p class="error-msg">{{ error_msg }}</p>
     {% endif %}
     <form method="POST" action="{{ url_for('login') }}">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
-        <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-        <br>
         <input type="submit" value="Login">
     </form>
 </body>
