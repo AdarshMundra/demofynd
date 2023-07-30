@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Superadmin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <div class="navbar">
+        {% if session['role'] == 'superadmin' %}
+            <a href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('user_management') }}">User Management</a>
+            <a href="{{ url_for('create_user') }}">Create User</a>
+        {% else %}
+               <a  href="{{ url_for('user_dashboard') }}">Dashboard</a>
+
+        {% endif %}
+
+        <a class="active" href="{{ url_for('task_management') }}">Task Management</a>
+        <a href="{{ url_for('create_task') }}">Add Task</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <h2>Task Management</h2>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>email</th>
+                <th>Task Name</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Status</th>
+<!--                <th>Description</th>-->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ task.user_email }}</td>
+                <td>{{ task.Name }}</td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.end_date }}</td>
+                <td>{{ task.status }}</td>
+
+                <td>
+                    <a href="{{ url_for('modify_task', task_id=task.unique_id) }}"><i class="fas fa-eye"></i></a>
+
+                    <a href="{{ url_for('delete_task', task_id=task.unique_id) }}"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<!--    <h2>Task Management</h2>-->
+<!--    <ul>-->
+<!--        {% for task in tasks %}-->
+<!--            <li>{{ task.Name }} - {{ task.description }}</li>-->
+<!--        {% endfor %}-->
+<!--    </ul>-->
+
+</body>
+</html>
