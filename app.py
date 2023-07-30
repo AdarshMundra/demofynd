@@ -174,6 +174,9 @@ def modify_task(task_id):
         task.Name = request.form['task_name']
         task.description = request.form['description']
         task.status = request.form['status']
+        task.start_date = request.form['start time']
+        task.end_date = request.form['end time']
+
         # Update other task properties as needed
 
         db.session.commit()
