@@ -3,6 +3,7 @@
 <head>
     <title>User Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
     <div class="navbar">
@@ -13,8 +14,26 @@
             <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
-    <h1>Welcome, User!</h1>
+    <h1>Welcome, {{ username }}!</h1>
     <p>This is your dashboard where you can view and manage your tasks.</p>
-
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Level</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in log_entries %}
+                {% if entry.split(' - ')[2] != "127.0.0.1"%}
+                <tr>
+                    <td>{{ entry.split(' - ')[0] }}</td>
+                    <td>{{ entry.split(' - ')[2] }}</td>
+                    <td>{{ entry.split(' - ')[4] }}</td>
+                </tr>
+                {% endif%}
+            {% endfor %}
+        </tbody>
 </body>
 </html>
