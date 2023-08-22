@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from models import db, SuperAdmin, User, ToDoList, AchiveToDoList
+from models import db, SuperAdmin, User, ToDoList
 import logging
+
 # Set up logging configuration
 logging.basicConfig(filename='app.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 logger = logging.getLogger(__name__)
 app = Flask(__name__, static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/fynd'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/fynd'
+# app.config["DEBUG"] = True
+app.config['SQLALCHEMY_DATABASE_URI']= "mysql://admin:IvkDQNtk80HUW5l40v6A@databasetest.cl4pduwjhwak.us-east-1.rds.amazonaws.com:3306/fynd"
+# app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#
 app.secret_key = 'your_secret_key'  # Change this to a random and secure secret key
+
+
+
 db.init_app(app)
 
 
@@ -17,16 +26,16 @@ def index():
     # Implement the index page
     return render_template('login.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email'].strip()
         password = request.form['password']
-
+        print(email)
+        print(password)
         # Check if a superadmin with the provided email exists
         superadmin = SuperAdmin.query.filter_by(Email=email).first()
-
+        print(superadmin)
         if superadmin and superadmin.Password == password:
             # Set the session to store the logged-in user's email and role
             session['email'] = superadmin.Email
@@ -238,5 +247,5 @@ def delete_task(task_id):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
-    # app.run(debug=True)
+    # app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)

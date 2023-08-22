@@ -32,15 +32,3 @@ class ToDoList(db.Model):
     status = db.Column(db.String(50))
     description = db.Column(db.Text)
     update_time = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-
-
-class AchiveToDoList(db.Model):
-    __tablename__ = 'archivetodolist'
-    unique_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_email = db.Column(db.String(255), db.ForeignKey('user.email'))
-    Name = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.DateTime)
-    end_date = db.Column(db.DateTime)
-    status = db.Column(db.String(50))
-    description = db.Column(db.Text)
-    update_time = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
